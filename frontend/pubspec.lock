@@ -94,30 +94,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_dropzone:
-    dependency: "direct main"
-    description:
-      name: flutter_dropzone
-      sha256: "3ae0e79a9a44ca75005d0be196e5ad04042c5c7a85855c306167a0c93ff17d6f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.5"
-  flutter_dropzone_platform_interface:
-    dependency: transitive
-    description:
-      name: flutter_dropzone_platform_interface
-      sha256: "3d153344397dd5c9d5323472ff5bad20779f56206fa6f97fcce294bb1cea6987"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.5"
-  flutter_dropzone_web:
-    dependency: transitive
-    description:
-      name: flutter_dropzone_web
-      sha256: "41c7350a9fbf38b5009a0f0d50069856184189430b1ed79ea4c1efb7ed2cd4ee"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.8"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -128,11 +104,6 @@ packages:
     version: "2.0.1"
   flutter_test:
     dependency: "direct dev"
-    description: flutter
-    source: sdk
-    version: "0.0.0"
-  flutter_web_plugins:
-    dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -184,14 +155,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.2"
-  plugin_platform_interface:
-    dependency: transitive
-    description:
-      name: plugin_platform_interface
-      sha256: "6a2128648c854906c53fa8e33986fc0247a1116122f9534dd20e3ab9e16a32bc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.4"
   pointycastle:
     dependency: transitive
     description:
@@ -200,6 +163,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.7.2"
+  quiver:
+    dependency: "direct main"
+    description:
+      name: quiver
+      sha256: b1c1ac5ce6688d77f65f3375a9abb9319b3cb32486bdc7a1e0fdf004d7ba4e47
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -269,6 +240,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  yaml:
+    dependency: "direct main"
+    description:
+      name: yaml
+      sha256: "23812a9b125b48d4007117254bca50abb6c712352927eece9e155207b1db2370"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
 sdks:
   dart: ">=2.19.6 <3.0.0"
-  flutter: ">=1.12.13+hotfix.6"
