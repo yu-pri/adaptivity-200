@@ -127,7 +127,33 @@ void main() {
       });
     }
   });
+  
+  group('apply mask', () {
+    final cases = [
+      [[true, true, true], [true, true, true], 3],
+      [[false, false, false], [true, true, true], 0],
+      [[false, false, false], [false, false, false], 3],
+      [[true, false, false], [true, false, false], 3],
+      [[false, true, false], [true, false, true], 0],
+      [[true, true, true], [true, false, false], 1],
+      [[true, true, true], [true, true, false], 2],
+    ];
 
+    for (final c in cases) {
+      final answers = c[0] as List<bool>;
+      final mask = c[1] as List<bool?>;
+      final expectedCount = c[2] as int;
+
+      test('$answers | $mask -> $expectedCount', () {
+        final count = applyMaskAndCount(answers, mask);
+        expect(count, expectedCount);
+      });
+
+    }
+  });
+  
+  
+  
   // test('FormsParser', () async {
   //   final file = fs.file('../test_data/questions.txt');
   //
