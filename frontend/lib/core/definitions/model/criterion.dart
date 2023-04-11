@@ -17,7 +17,7 @@ enum Criterion implements Comparable<Criterion> {
   }
 
   static List<Criterion> get rawCriteria =>
-      values.where((c) => c == Criterion.collectedAdaptivityPotential).toList();
+      values.where((c) => c != Criterion.collectedAdaptivityPotential).toList();
 
   @override
   int compareTo(Criterion other) => key.compareTo(other.key);

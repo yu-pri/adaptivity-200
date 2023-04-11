@@ -1,3 +1,6 @@
+import 'package:adaptivity_200/config/routes.dart';
+import 'package:adaptivity_200/screens/quiz_screen.dart';
+import 'package:adaptivity_200/screens/send_results_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,42 +13,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-          ],
-        ),
-      ),
+      routes: {
+        Routes.quiz: (c) => const QuizScreen(),
+        Routes.sendAnswers: (c) => const SendResultsScreen(),
+      },
     );
   }
 }
