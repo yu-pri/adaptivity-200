@@ -22,7 +22,6 @@ class _QuizScreenState extends State<QuizScreen> {
 
     if (quizChecked) {
       Navigator.of(context).pushNamed(Routes.sendAnswers);
-      qp.clearProgress();
     }
   }
 
@@ -38,14 +37,13 @@ class _QuizScreenState extends State<QuizScreen> {
       appBar: AppBar(
         actions: [
           ElevatedButton(
+            onPressed: _reset,
+            child: const Text('Згенерувати інші \nвідповіді'),
+          ),
+          ElevatedButton(
             onPressed: _checkResults,
             child: const Text('Перевірити'),
           ),
-
-          ElevatedButton(
-            onPressed: _reset,
-            child: const Text('Reset'),
-          )
         ],
       ),
       body: Consumer<QuizProvider>(

@@ -28,8 +28,9 @@ class GlobalStateInjector extends StatelessWidget {
         ),
         ChangeNotifierProvider(
             create: (context) {
+              final result = context.read<QuizProvider>().result;
               return ResultSender(
-                result: context.read<QuizProvider>().result!,
+                result: result!,
               );
             },
         )      ],

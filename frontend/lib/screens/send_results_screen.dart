@@ -11,7 +11,17 @@ class SendResultsScreen extends StatefulWidget {
 }
 
 class _SendResultsScreenState extends State<SendResultsScreen> {
+  final _surnameFieldController = TextEditingController();
+  final _fathersNameFieldController = TextEditingController();
   final _nameFieldController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  String? _requireNotEmpty(String? v) {
+    const fieldRequired = 'Обовʼязкове поле';
+    if (v == null) return fieldRequired;
+    if (v.trim().isEmpty) return fieldRequired;
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,21 +30,56 @@ class _SendResultsScreenState extends State<SendResultsScreen> {
       body: Center(
         child: Column(
           children: [
-            TextField(
-              controller: _nameFieldController,
-              decoration: const InputDecoration(
-                label: Text('ПІБ'),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.always,
+                      controller: _surnameFieldController,
+                      validator: _requireNotEmpty,
+                      decoration: const InputDecoration(
+                        label: Text('Прізвище'),
+                      ),
+                    ),
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.always,
+                      validator: _requireNotEmpty,
+                      controller: _nameFieldController,
+                      decoration: const InputDecoration(
+                        label: Text('Імʼя'),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _fathersNameFieldController,
+                      decoration: const InputDecoration(
+                        label: Text('По батькові'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
+            Padding(padding: EdgeInsets.only(bottom: 12)),
             ElevatedButton(
               onPressed: () async {
-                await showDialog(
+                final fieldsFilled = _formKey.currentState?.validate() ?? false;
+                print(fieldsFilled);
+                if (!fieldsFilled) return;
+                final n = _nameFieldController.text;
+                final s = _surnameFieldController.text;
+                final f = _fathersNameFieldController.text;
+                final fullName = '$s $n $f';
+
+                final didSend = await showDialog(
                   context: context,
                   builder: (c) => SendConfirmationDialog(
-                    name: _nameFieldController.text,
+                    name: fullName,
                   ),
-                );
-                if (mounted) Navigator.of(context).pop();
+                ) ?? false;
+                if (mounted && didSend) Navigator.of(context).pop();
               },
               child: const Text('Надіслати'),
             ),
@@ -81,7 +126,7 @@ class SendConfirmationDialog extends StatelessWidget {
                   ),
                 );
               }
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(true);
             },
             child: const Text('Надіслати'),
           )

@@ -79,7 +79,6 @@ class QuizProvider extends ChangeNotifier {
   Future<void> clearProgress() async {
     await _questionsRepository.clearOrder();
     await _answersRepository.clearAnswers();
-    _result = null;
     await _init();
     notifyListeners();
   }

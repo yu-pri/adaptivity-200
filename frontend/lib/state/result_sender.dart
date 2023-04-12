@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:adaptivity_200/core/definitions/adaptivity_result_evaluator.dart';
 import 'package:adaptivity_200/domain/result_encoders/zip/encoder.dart';
-import 'package:archive/archive.dart';
 import 'package:download/download.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
@@ -44,7 +42,8 @@ class ResultSender extends ChangeNotifier {
     AdaptivityResult quizResult,
   ) async {
     final encodedResult = AdaptivityResultEncoder().convert(quizResult);
-    final zipname = '$name.zip';
+    final now = DateTime.now().toIso8601String();
+    final zipname = '$now $name.zip';
     final shareF = _tryShare(zipname, encodedResult);
     _loading = true;
     notifyListeners();
