@@ -15,6 +15,8 @@ dependencies:
   yaml: ^3.1.1
   provider:
   shared_preferences:
+  share_plus:
+  download:
 
 dev_dependencies:
   flutter_test:

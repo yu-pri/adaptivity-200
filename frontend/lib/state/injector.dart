@@ -1,32 +1,39 @@
 import 'package:adaptivity_200/core/definitions/adaptivity_result_evaluator.dart';
+import 'package:adaptivity_200/repository/answers_repository.dart';
 import 'package:adaptivity_200/repository/evaluation_criteria_repository.dart';
+import 'package:adaptivity_200/repository/questions_repository.dart';
 import 'package:adaptivity_200/state/quiz_provider.dart';
+import 'package:adaptivity_200/state/result_sender.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class GlobalStateInjector extends StatefulWidget {
-  const GlobalStateInjector({Key? key}) : super(key: key);
+class GlobalStateInjector extends StatelessWidget {
+  final Widget child;
 
-  @override
-  State<GlobalStateInjector> createState() => _GlobalStateInjectorState();
-}
-
-class _GlobalStateInjectorState extends State<GlobalStateInjector> {
-
-  @override
-  void initState() {
-    super.initState();
-
-    final evaluationCriteria = EvaluationCriteriaRepository().load();
-    evaluator = AdaptivityResultEvaluator(criteria: evaluationCriteria);
-  }
-  late final AdaptivityResultEvaluator evaluator;
+  const GlobalStateInjector({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: [
-      QuizProvider(questions: questions, evaluator: evaluator),
-
-    ]);
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (c) => QuizProvider(
+            questionsRepo: QuestionsRepository(),
+            evaluationCriteriaRepository: EvaluationCriteriaRepository(),
+            answersRepository: AnswersRepository(),
+          ),
+        ),
+        ChangeNotifierProvider(
+            create: (context) {
+              return ResultSender(
+                result: context.read<QuizProvider>().result!,
+              );
+            },
+        )      ],
+      child: child,
+    );
   }
 }

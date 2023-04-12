@@ -1,6 +1,7 @@
 import 'package:adaptivity_200/config/routes.dart';
 import 'package:adaptivity_200/screens/quiz_screen.dart';
 import 'package:adaptivity_200/screens/send_results_screen.dart';
+import 'package:adaptivity_200/state/injector.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,11 +13,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: {
-        Routes.quiz: (c) => const QuizScreen(),
-        Routes.sendAnswers: (c) => const SendResultsScreen(),
-      },
+    return GlobalStateInjector(
+      child: MaterialApp(
+        initialRoute: Routes.quiz,
+        routes: {
+          Routes.quiz: (c) => const QuizScreen(),
+          Routes.sendAnswers: (c) => const SendResultsScreen(),
+        },
+      ),
     );
   }
 }

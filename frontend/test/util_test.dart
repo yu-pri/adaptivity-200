@@ -135,8 +135,8 @@ void main() {
       final answers = List.generate(200, (_) => Random().nextInt(3) == 0);
 
       final result = evaluator.evaluateAnswers(answers);
-      for (final r in result.results) {
-        buf.write('${r.criterion.name}: ${r.score} : ${r.tier} ');
+      for (final e in result.results.entries) {
+        buf.write('${e.key.name}: ${e.value.score} : ${e.value.tier} ');
       }
       print(buf.toString());
     }

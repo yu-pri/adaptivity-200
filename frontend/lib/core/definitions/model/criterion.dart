@@ -1,12 +1,12 @@
 enum Criterion implements Comparable<Criterion> {
-  behaviorRegulation('behavior_regulation'),
-  testReliability('reliability'),
-  suicideRisk('suicide_risk'),
-  communicationPotential('communication_potential'),
-  collectedAdaptivityPotential('adaptivity'),
-  militaryPredisposition('military_predisposition'),
-  deviancy('deviancy'),
-  moralNormativity('moral_normativity');
+  collectedAdaptivityPotential('ОАП'),
+  testReliability('Д'),
+  behaviorRegulation('ПР'),
+  suicideRisk('СР'),
+  communicationPotential('КП'),
+  militaryPredisposition('ВПС'),
+  deviancy('ДАП'),
+  moralNormativity('МН');
 
   const Criterion(this.key);
 

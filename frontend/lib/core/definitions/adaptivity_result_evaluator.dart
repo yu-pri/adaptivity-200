@@ -28,42 +28,47 @@ class AdaptivityResultEvaluator {
       CriterionEvaluationKeys keys, List<bool> answers) {
     final score = applyMaskAndCount(answers, keys.evaluationMask!);
     final tier = determineTier(score, keys.tierThresholds);
-    return CriterionResult(keys.criterion, score, tier);
+    return CriterionResult(score, tier);
   }
 
   AdaptivityResult evaluateAnswers(List<bool> answers) {
-    final results = criteria.rawCriteriaKeys
-        .map((e) => evaluateCriterion(e, answers))
-        .toList();
+    final results = Map<Criterion, CriterionResult>.fromEntries(
+      criteria.rawCriteriaKeys.map(
+        (e) => MapEntry(
+          e.criterion,
+          evaluateCriterion(e, answers),
+        ),
+      ),
+    );
 
     const adaptivityCriteria = [
       Criterion.behaviorRegulation,
       Criterion.communicationPotential,
       Criterion.militaryPredisposition,
     ];
-    final adaptivityScore = results
-        .where((r) => adaptivityCriteria.contains(r.criterion))
+    final adaptivityScore = adaptivityCriteria
+        .map((c) => results[c]!)
         .map((r) => r.score)
         .fold(0, (a, b) => a + b);
 
     final adaptivityTier =
         determineTier(adaptivityScore, criteria.adaptivityThresholds);
 
+    results[Criterion.collectedAdaptivityPotential] =
+        CriterionResult(adaptivityScore, adaptivityTier);
     return AdaptivityResult(
-      [
-        CriterionResult(
-          Criterion.collectedAdaptivityPotential,
-          adaptivityScore,
-          adaptivityTier,
-        ),
-        ...results,
-      ],
+      rawAnswers: answers,
+      results: results,
     );
   }
 }
 
 class AdaptivityResult {
-  final List<CriterionResult> results;
+  final List<bool> rawAnswers;
+  final Map<Criterion, CriterionResult> results;
 
-  AdaptivityResult(this.results);
+  AdaptivityResult({
+    required this.rawAnswers,
+    required this.results,
+  });
 }
