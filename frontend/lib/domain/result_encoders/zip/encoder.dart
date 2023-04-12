@@ -15,8 +15,8 @@ class AdaptivityResultEncoder extends Converter<AdaptivityResult, Uint8List> {
 
     final archive = Archive();
     [
-      _zipStringFile('відповіді.tsv', raw),
-      _zipStringFile('результат.tsv', results),
+      _zipStringFile('відповіді.csv', raw),
+      _zipStringFile('результат.csv', results),
     ].forEach(archive.addFile);
 
     return ZipEncoder().encode(archive) as Uint8List;
@@ -40,12 +40,12 @@ class AdaptivityResultEncoder extends Converter<AdaptivityResult, Uint8List> {
     ];
 
     final sb = StringBuffer();
-    final header = ['Критерій', 'Бали', 'Стен'].join('\t');
+    final header = ['Критерій', 'Бали', 'Стен'].join(',');
 
     sb.writeln(header);
     for (final c in sortOrder) {
       final result = r[c]!;
-      final line = [c.key, result.score, result.tier].join('\t');
+      final line = [c.key, result.score, result.tier].join(',');
       sb.writeln(line);
     }
     return sb.toString();
