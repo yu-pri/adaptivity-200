@@ -117,7 +117,9 @@ class _QuizScreenState extends State<QuizScreen> {
               Radio<bool>(
                 value: true,
                 groupValue: question.answer,
-                onChanged: (_) {},
+                onChanged: (_) {
+                  quizProvider.recordAnswer(question.id, true);
+                },
               ),
               const Text('так'),
             ],
@@ -140,7 +142,9 @@ class _QuizScreenState extends State<QuizScreen> {
               Radio<bool>(
                 value: false,
                 groupValue: question.answer,
-                onChanged: (_) {},
+                onChanged: (_) {
+                  quizProvider.recordAnswer(question.id, false);
+                },
               ),
               const Text('ні'),
             ],
