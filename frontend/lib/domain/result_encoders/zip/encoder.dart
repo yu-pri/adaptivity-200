@@ -5,12 +5,10 @@ import 'package:adaptivity_200/core/definitions/adaptivity_result_evaluator.dart
 import 'package:adaptivity_200/core/definitions/model/criterion.dart';
 import 'package:adaptivity_200/core/definitions/model/criterion_result.dart';
 import 'package:archive/archive.dart';
-import 'package:collection/collection.dart';
 
-class AdaptivityResultEncoder extends Converter<AdaptivityResult, Uint8List> {
-  @override
-  Uint8List convert(AdaptivityResult input) {
-    final raw = formatRawAnswers(input.rawAnswers);
+class AdaptivityResultEncoder {
+  Uint8List convert(DateTime dt, String name, AdaptivityResult input) {
+    final raw = formatRawAnswers(dt, name, input.questions, input.rawAnswers);
     final results = formatResults(input.results);
 
     final archive = Archive();
@@ -51,11 +49,23 @@ class AdaptivityResultEncoder extends Converter<AdaptivityResult, Uint8List> {
     return sb.toString();
   }
 
-  static String formatRawAnswers(List<bool> answers) {
+  static String formatRawAnswers(
+      DateTime d, String name, List<String> questions, List<bool> answers) {
+    assert(questions.length == answers.length);
+
+    final headerRow = ['Час', 'адреса ел. пошти', 'ПІП:Звання:Посада'];
+    final dataRow = [d.toIso8601String(), '', name];
+
+    for (int i = 0; i < questions.length; i++) {
+      final q = questions[i];
+      headerRow.add('"${i + 1}. $q"');
+      dataRow.add(answers[i] ? 'ТАК' : 'НІ');
+    }
+
     final sb = StringBuffer();
-    final lines =
-        answers.mapIndexed((i, a) => '${i + 1}\t${a ? 'так' : 'ні'}\n');
-    sb.writeAll(lines);
+    for (final row in [headerRow, dataRow]) {
+      sb.writeln(row.join(','));
+    }
     return sb.toString();
   }
 }

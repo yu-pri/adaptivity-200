@@ -31,7 +31,7 @@ class AdaptivityResultEvaluator {
     return CriterionResult(score, tier);
   }
 
-  AdaptivityResult evaluateAnswers(List<bool> answers) {
+  AdaptivityResult evaluateAnswers(List<String> questions, List<bool> answers) {
     final results = Map<Criterion, CriterionResult>.fromEntries(
       criteria.rawCriteriaKeys.map(
         (e) => MapEntry(
@@ -57,6 +57,7 @@ class AdaptivityResultEvaluator {
     results[Criterion.collectedAdaptivityPotential] =
         CriterionResult(adaptivityScore, adaptivityTier);
     return AdaptivityResult(
+      questions: questions,
       rawAnswers: answers,
       results: results,
     );
@@ -64,10 +65,12 @@ class AdaptivityResultEvaluator {
 }
 
 class AdaptivityResult {
+  final List<String> questions;
   final List<bool> rawAnswers;
   final Map<Criterion, CriterionResult> results;
 
-  AdaptivityResult({
+  AdaptivityResult( {
+    required this.questions,
     required this.rawAnswers,
     required this.results,
   });

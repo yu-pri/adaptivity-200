@@ -11,6 +11,7 @@ class QuizProvider extends ChangeNotifier {
   final EvaluationCriteriaRepository _evaluationCriteriaRepository;
   final AnswersRepository _answersRepository;
   List<QuizQuestion> _questionsShuffled = [];
+  List<String>? _questionsOriginal;
   List<bool?> _answers = [];
   AdaptivityResultEvaluator? _resultEvaluator;
   AdaptivityResult? _result;
@@ -21,14 +22,16 @@ class QuizProvider extends ChangeNotifier {
     required QuestionsRepository questionsRepo,
     required EvaluationCriteriaRepository evaluationCriteriaRepository,
     required AnswersRepository answersRepository,
-  })  : _questionsRepository = questionsRepo,
+  })
+      : _questionsRepository = questionsRepo,
         _evaluationCriteriaRepository = evaluationCriteriaRepository,
         _answersRepository = answersRepository {
     _init();
   }
 
   Future<void> _init() async {
-    final questions = await _questionsRepository.load();
+    final questions =
+        _questionsOriginal ??= await _questionsRepository.load();
     final evalCriteria = await _evaluationCriteriaRepository.load();
     final storedOrder = await _questionsRepository.loadOrder();
     final answers = await _answersRepository.loadAnswers();
@@ -36,11 +39,14 @@ class QuizProvider extends ChangeNotifier {
 
     _answers = answers ?? List.generate(questions.length, (_) => null);
     _questionsShuffled = questions
-        .mapIndexed((i, q) => QuizQuestion(id: i, question: q, answer: _answers[i]))
+        .mapIndexed((i, q) =>
+        QuizQuestion(id: i, question: q, answer: _answers[i]))
         .toList();
     final order =
-        storedOrder ?? ListOrderUtils.generateRandomOrder(questions.length);
-    _questionsShuffled = ListOrderUtils.applyOrder(_questionsShuffled, order).toList();
+        storedOrder ??
+            ListOrderUtils.generateRandomOrder(questions.length);
+    _questionsShuffled =
+        ListOrderUtils.applyOrder(_questionsShuffled, order).toList();
     notifyListeners();
 
     _resultEvaluator = AdaptivityResultEvaluator(criteria: evalCriteria);
@@ -67,7 +73,7 @@ class QuizProvider extends ChangeNotifier {
     bool ok = false;
     if (!_answers.contains(null)) {
       final answers = _answers.cast<bool>();
-      _result = _resultEvaluator?.evaluateAnswers(answers);
+      _result = _resultEvaluator?.evaluateAnswers(_questionsOriginal!, answers);
       ok = true;
     } else {
       _quizError = QuizError.questionsUnfilled;

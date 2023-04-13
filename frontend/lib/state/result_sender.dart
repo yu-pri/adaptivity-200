@@ -41,9 +41,9 @@ class ResultSender extends ChangeNotifier {
     String name,
     AdaptivityResult quizResult,
   ) async {
-    final encodedResult = AdaptivityResultEncoder().convert(quizResult);
-    final now = DateTime.now().toIso8601String();
-    final zipname = '$now $name.zip';
+    final now = DateTime.now();
+    final encodedResult = AdaptivityResultEncoder().convert(now, name, quizResult);
+    final zipname = '${now.toIso8601String()} $name.zip';
     final shareF = _tryShare(zipname, encodedResult);
     _loading = true;
     notifyListeners();
