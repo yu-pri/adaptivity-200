@@ -4,11 +4,12 @@ import 'dart:typed_data';
 import 'package:adaptivity_200/core/definitions/adaptivity_result_evaluator.dart';
 import 'package:adaptivity_200/core/definitions/model/criterion.dart';
 import 'package:adaptivity_200/core/definitions/model/criterion_result.dart';
+import 'package:adaptivity_200/core/definitions/model/responder.dart';
 import 'package:archive/archive.dart';
 
 class AdaptivityResultEncoder {
-  Uint8List convert(DateTime dt, String name, AdaptivityResult input) {
-    final raw = formatRawAnswers(dt, name, input.questions, input.rawAnswers);
+  Uint8List convert(DateTime dt, Responder responder, AdaptivityResult input) {
+    final raw = formatRawAnswers(dt, responder, input.questions, input.rawAnswers);
     final results = formatResults(input.results);
 
     final archive = Archive();
@@ -50,11 +51,12 @@ class AdaptivityResultEncoder {
   }
 
   static String formatRawAnswers(
-      DateTime d, String name, List<String> questions, List<bool> answers) {
+      DateTime d, Responder responder, List<String> questions, List<bool> answers) {
     assert(questions.length == answers.length);
 
+    final responderData = '${responder.fullName}: ${responder.rank}: ${responder.position}';
     final headerRow = ['Час', 'адреса ел. пошти', 'ПІП:Звання:Посада'];
-    final dataRow = [d.toIso8601String(), '', name];
+    final dataRow = [d.toIso8601String(), '', responderData];
 
     for (int i = 0; i < questions.length; i++) {
       final q = questions[i];

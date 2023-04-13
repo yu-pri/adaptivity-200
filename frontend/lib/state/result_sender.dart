@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:adaptivity_200/core/definitions/adaptivity_result_evaluator.dart';
+import 'package:adaptivity_200/core/definitions/model/responder.dart';
 import 'package:adaptivity_200/domain/result_encoders/zip/encoder.dart';
 import 'package:download/download.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,6 @@ import 'package:share_plus/share_plus.dart';
 class ResultSender extends ChangeNotifier {
   final AdaptivityResult result;
   bool _loading = false;
-  bool _error = false;
   String? _message;
 
   ResultSender({
@@ -19,8 +19,6 @@ class ResultSender extends ChangeNotifier {
   bool get loading => _loading;
 
   String? get message => _message;
-
-  bool get error => _error;
 
   Future<ShareResultStatus> _tryShare(String name,
       Uint8List data) async {
@@ -38,12 +36,12 @@ class ResultSender extends ChangeNotifier {
     }
   }
   void share(
-    String name,
+    Responder responder,
     AdaptivityResult quizResult,
   ) async {
     final now = DateTime.now();
-    final encodedResult = AdaptivityResultEncoder().convert(now, name, quizResult);
-    final zipname = '${now.toIso8601String()} $name.zip';
+    final encodedResult = AdaptivityResultEncoder().convert(now, responder, quizResult);
+    final zipname = '${now.toIso8601String()} ${responder.fullName}.zip';
     final shareF = _tryShare(zipname, encodedResult);
     _loading = true;
     notifyListeners();

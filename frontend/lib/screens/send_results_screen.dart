@@ -1,3 +1,4 @@
+import 'package:adaptivity_200/core/definitions/model/responder.dart';
 import 'package:adaptivity_200/state/quiz_provider.dart';
 import 'package:adaptivity_200/state/result_sender.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ class _SendResultsScreenState extends State<SendResultsScreen> {
   final _surnameFieldController = TextEditingController();
   final _fathersNameFieldController = TextEditingController();
   final _nameFieldController = TextEditingController();
+  final _rankFieldController = TextEditingController();
+  final _positionFieldController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   String? _requireNotEmpty(String? v) {
@@ -58,6 +61,22 @@ class _SendResultsScreenState extends State<SendResultsScreen> {
                         label: Text('По батькові'),
                       ),
                     ),
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.always,
+                      validator: _requireNotEmpty,
+                      controller: _rankFieldController,
+                      decoration: const InputDecoration(
+                        label: Text('Звання'),
+                      ),
+                    ),
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.always,
+                      validator: _requireNotEmpty,
+                      controller: _positionFieldController,
+                      decoration: const InputDecoration(
+                        label: Text('Посада'),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -66,19 +85,22 @@ class _SendResultsScreenState extends State<SendResultsScreen> {
             ElevatedButton(
               onPressed: () async {
                 final fieldsFilled = _formKey.currentState?.validate() ?? false;
-                print(fieldsFilled);
                 if (!fieldsFilled) return;
-                final n = _nameFieldController.text;
-                final s = _surnameFieldController.text;
-                final f = _fathersNameFieldController.text;
-                final fullName = '$s $n $f';
+                final responder = Responder(
+                  name: _nameFieldController.text,
+                  surname: _surnameFieldController.text,
+                  fathersName: _fathersNameFieldController.text,
+                  rank: _rankFieldController.text,
+                  position: _positionFieldController.text,
+                );
 
                 final didSend = await showDialog(
-                  context: context,
-                  builder: (c) => SendConfirmationDialog(
-                    name: fullName,
-                  ),
-                ) ?? false;
+                      context: context,
+                      builder: (c) => SendConfirmationDialog(
+                        responder: responder,
+                      ),
+                    ) ??
+                    false;
                 if (mounted && didSend) Navigator.of(context).pop();
               },
               child: const Text('Надіслати'),
@@ -91,11 +113,11 @@ class _SendResultsScreenState extends State<SendResultsScreen> {
 }
 
 class SendConfirmationDialog extends StatelessWidget {
-  final String name;
+  final Responder responder;
 
   const SendConfirmationDialog({
     Key? key,
-    required this.name,
+    required this.responder,
   }) : super(key: key);
 
   @override
@@ -106,7 +128,9 @@ class SendConfirmationDialog extends StatelessWidget {
         content: Column(
           children: [
             const Text('Будь ласка, перевірте введені дані:'),
-            Text('ПІБ: $name'),
+            Text('ПІБ: ${responder.fullName}'),
+            Text('Звання: ${responder.rank}'),
+            Text('Посада: ${responder.position}'),
           ],
         ),
         actions: [
@@ -117,7 +141,7 @@ class SendConfirmationDialog extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               try {
-                sender.share(name, sender.result);
+                sender.share(responder, sender.result);
                 context.read<QuizProvider>().clearProgress();
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
